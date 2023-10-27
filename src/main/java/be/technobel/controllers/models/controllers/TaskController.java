@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,8 +27,10 @@ public class TaskController {
 
     @GetMapping("/create")
     public String getCreate(Model model){
-
+        TaskForm taskForm = new TaskForm();
         model.addAttribute("task", new TaskForm());
+        taskForm.setAddDate(LocalDate.now());
+
         return "task/create";
     }
 
@@ -35,6 +38,7 @@ public class TaskController {
     public String postCreate(@ModelAttribute TaskForm taskForm) {
 
         taskService.create(taskForm.toEntity());
+
         return "redirect:/task";
     }
 
@@ -106,7 +110,7 @@ public class TaskController {
         tasks.sort(Comparator.comparing(Task::getId));
         List<TaskDTO> dtos = tasks.stream().map(TaskDTO::fromEntity).toList();
         model.addAttribute("tasks", dtos);
-        return "task/finishedTask"; //
+        return "task/finishedTask";
 
     }
 
@@ -117,7 +121,7 @@ public class TaskController {
         tasks.sort(Comparator.comparing(Task::getId));
         List<TaskDTO> dtos = tasks.stream().map(TaskDTO::fromEntity).toList();
         model.addAttribute("tasks", dtos);
-        return "task/NotFinishedTask"; //
+        return "task/NotFinishedTask";
 
     }
 
@@ -125,7 +129,8 @@ public class TaskController {
     public String deleteFinishedTask (){
 
         taskService.deleteAllFinishedTask();
-        return "redirect:/task/finishedTask";
+
+        return "redirect:/task";
     }
 
 

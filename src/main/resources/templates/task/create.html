@@ -19,7 +19,8 @@
 
       <label class="form-label mt-2" > Date de fin </label>
       <input type="date" th:field="*{deadline}"  th:value="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}" class="form-control">
-      <label class="form-label mt-2"> Date d'ajout</label> <input type="date" id="dateDebut" th:field="*{addDate}" th:value="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}" class="form-control">
+      <label class="form-label mt-2"> Date d'ajout</label>
+      <input type="date" id="dateDebut" th:field="*{addDate}" th:value="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}" class="form-control">
       <button type="submit"  class="btn btn-primary mt-5" > Envoyer </button>
     </form>
 

@@ -6,6 +6,7 @@ import be.technobel.controllers.models.services.TaskService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -22,6 +23,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task create(Task task) {
+        LocalDate addDate = task.getAddDate();
+
+
+        if(addDate == null){
+            task.setAddDate(LocalDate.now());
+        }
+
+
         return taskRepository.save(task);
     }
 
@@ -54,7 +63,6 @@ public class TaskServiceImpl implements TaskService {
         existingTask.setDeadline(task.getDeadline());
 
         return taskRepository.save(existingTask);
-
 
     }
 
