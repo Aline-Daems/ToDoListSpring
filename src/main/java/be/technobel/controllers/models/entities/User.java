@@ -2,25 +2,26 @@ package be.technobel.controllers.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDate;
 
 @Entity
 @Data
-public class Task {
+@Table(name="User_")
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
+    private String firstname;
 
-    private String description;
+    private String lastname;
 
-    private LocalDate deadline;
+    private String login;
 
-    private LocalDate AddDate;
+    private String password;
 
-    private Boolean finish = false;
+    private LocalDate birthday;
 
     @ManyToOne
     @JoinColumn(name = "categorie_id")

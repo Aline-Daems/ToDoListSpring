@@ -1,12 +1,16 @@
 package be.technobel.controllers.models.controllers;
 
+import be.technobel.controllers.models.dto.CategorieDto;
 import be.technobel.controllers.models.dto.TaskDTO;
+import be.technobel.controllers.models.entities.Categorie;
 import be.technobel.controllers.models.entities.Task;
 import be.technobel.controllers.models.forms.TaskForm;
+import be.technobel.controllers.models.services.CategorieService;
 import be.technobel.controllers.models.services.TaskService;
-import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -18,10 +22,11 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
-
-    public TaskController(TaskService taskService){
+    private final CategorieService categorieService;
+    public TaskController(TaskService taskService, CategorieService categorieService){
 
         this.taskService= taskService;
+        this.categorieService = categorieService;
     }
 
 
@@ -30,16 +35,20 @@ public class TaskController {
         TaskForm taskForm = new TaskForm();
         model.addAttribute("task", new TaskForm());
         taskForm.setAddDate(LocalDate.now());
-
+        List<Categorie> categorieList = categorieService.getAll();
+        List<CategorieDto> dtosCat = categorieList.stream().map(CategorieDto::fromEntity).toList();
+        model.addAttribute("categories", dtosCat);
         return "task/create";
     }
 
     @PostMapping("/create")
-    public String postCreate(@ModelAttribute TaskForm taskForm) {
+    public String postCreate(@ModelAttribute ("task") @Valid TaskForm task, BindingResult bindingResult) {
 
-        taskService.create(taskForm.toEntity());
-
-        return "redirect:/task";
+        if(bindingResult.hasErrors()){
+            return "task/create";
+        }
+        taskService.create(task.toEntity());
+        return"redirect:/task";
     }
 
     @GetMapping
@@ -49,6 +58,9 @@ public class TaskController {
         tasks.sort(Comparator.comparing(Task::getId));
         List<TaskDTO> dtos = tasks.stream().map(TaskDTO::fromEntity).toList();
         model.addAttribute("tasks", dtos);
+
+
+
         return "task/index";
     }
 
@@ -73,6 +85,8 @@ public class TaskController {
 
         Task task = taskService.GetOne(id);
         TaskForm form = TaskForm.fromEntity(task);
+
+
         model.addAttribute("id", id);
         model.addAttribute("task", form);
         return "/task/update";
@@ -82,7 +96,10 @@ public class TaskController {
     @PostMapping("/update/{id}")
     public String PostUpdate(@PathVariable Long id, @ModelAttribute TaskForm form){
 
-        taskService.Update(form.toEntity(), id);
+        Task task = form.toEntity();
+
+
+        taskService.Update(task, id);
         return "redirect:/task";
     }
 

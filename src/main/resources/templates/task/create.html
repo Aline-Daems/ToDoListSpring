@@ -10,17 +10,28 @@
   <h1>Inscrire une nouvelle tâche</h1>
 
   <div class="d-flex flex-column justify-content-center align-items-center  ">
-    <form th:action="@{/task/create}" th:object="${task}" method="post">
+    <form th:action="@{/task/create}" method="post">
 
       <label class="form-label"> Nom </label>
-      <input type="text" th:field="*{name}"  class="form-control">
+      <input type="text" th:field="${task.name}"  class="form-control">
+      <span th:if="${#fields.hasErrors('task.name')}" th:errors="${task.name}" style="color:red"></span><br/>
       <label class="form-label mt-2" > Description  </label>
-      <textarea th:field="*{description}" class="form-control"/>
-
+      <textarea th:field="${task.description}" class="form-control"/>
+      <span th:if="${#fields.hasErrors('task.description')}" th:errors="${task.description}" style="color:red"></span><br/>
       <label class="form-label mt-2" > Date de fin </label>
-      <input type="date" th:field="*{deadline}"  th:value="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}" class="form-control">
+      <input type="date" th:field="${task.deadline}"  th:value="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}" class="form-control">
+      <span th:if="${#fields.hasErrors('task.deadline')}" th:errors="${task.deadline}" style="color:red"></span><br/>
       <label class="form-label mt-2"> Date d'ajout</label>
-      <input type="date" id="dateDebut" th:field="*{addDate}" th:value="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}" class="form-control">
+      <input type="date" id="dateDebut" th:field="${task.addDate}" th:value="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}" class="form-control">
+      <span th:if="${#fields.hasErrors('task.addDate')}" th:errors="${task.addDate}" style="color:red"></span> <br/>
+
+      <select class="form-select" aria-label="Default select example" th:field="*{task.categorie.id}">
+        <option selected value="0">Catégorie</option>
+        <option value="1" th:each="categorie : ${categories}" th:text="${categorie.name}" th:value="${categorie.id}"></option>
+
+      </select>
+
+
       <button type="submit"  class="btn btn-primary mt-5" > Envoyer </button>
     </form>
 

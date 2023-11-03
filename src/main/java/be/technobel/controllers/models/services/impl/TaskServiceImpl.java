@@ -43,6 +43,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task GetOne(Long id) {
         return taskRepository.findById(id).orElseThrow();
+        //gérer l'exception en faisant une exception custom
     }
 
 
@@ -61,6 +62,7 @@ public class TaskServiceImpl implements TaskService {
         existingTask.setDescription(task.getDescription());
         existingTask.setAddDate(task.getAddDate());
         existingTask.setDeadline(task.getDeadline());
+        existingTask.setCategorie(task.getCategorie());
 
         return taskRepository.save(existingTask);
 
